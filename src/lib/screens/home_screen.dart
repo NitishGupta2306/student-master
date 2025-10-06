@@ -8,6 +8,7 @@ import '../services/theme_provider.dart';
 import '../models/student.dart';
 import '../widgets/student_detail_dialog.dart';
 import '../widgets/student_form_dialog.dart';
+import '../constants/app_constants.dart';
 import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -314,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onNotification: (notification) {
                                 if (notification.metrics.pixels >=
                                     notification.metrics.maxScrollExtent -
-                                        200) {
+                                        AppConstants.loadMoreThreshold) {
                                   provider.loadMoreStudents();
                                 }
                                 return false;

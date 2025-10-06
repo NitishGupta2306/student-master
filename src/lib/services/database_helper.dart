@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import '../constants/app_constants.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -9,7 +10,7 @@ class DatabaseHelper {
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('students.db');
+    _database = await _initDB(AppConstants.databaseName);
     return _database!;
   }
 
@@ -17,7 +18,11 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(
+      path,
+      version: AppConstants.databaseVersion,
+      onCreate: _createDB,
+    );
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -48,7 +53,7 @@ class DatabaseHelper {
   // Reset database (for testing purposes)
   Future<void> resetDatabase() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'students.db');
+    final path = join(dbPath, AppConstants.databaseName);
     await deleteDatabase(path);
     _database = null;
   }

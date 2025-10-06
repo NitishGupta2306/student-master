@@ -1,3 +1,5 @@
+import '../constants/app_constants.dart';
+
 class Validators {
   /// Validate email format
   static String? validateEmail(String? value) {
@@ -42,8 +44,8 @@ class Validators {
       return 'Name is required';
     }
 
-    if (value.trim().length < 2) {
-      return 'Name must be at least 2 characters';
+    if (value.trim().length < AppConstants.minNameLength) {
+      return 'Name must be at least ${AppConstants.minNameLength} characters';
     }
 
     return null;
@@ -79,12 +81,12 @@ class Validators {
   /// Check if file extension is valid
   static bool isValidImageExtension(String filename) {
     final ext = filename.toLowerCase().split('.').last;
-    return ['jpg', 'jpeg', 'png'].contains(ext);
+    return AppConstants.allowedImageExtensions.contains(ext);
   }
 
   /// Check if video extension is valid
   static bool isValidVideoExtension(String filename) {
     final ext = filename.toLowerCase().split('.').last;
-    return ['mp4', 'mov', 'avi'].contains(ext);
+    return AppConstants.allowedVideoExtensions.contains(ext);
   }
 }

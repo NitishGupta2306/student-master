@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/student.dart';
 import 'student_repository.dart';
 import '../utils/test_data_generator.dart';
+import '../constants/app_constants.dart';
 
 class StudentProvider extends ChangeNotifier {
   final StudentRepository _repository = StudentRepository();
@@ -13,7 +14,7 @@ class StudentProvider extends ChangeNotifier {
   String _sortBy = 'name';
   bool _sortAscending = true;
   int _currentPage = 0;
-  final int _pageSize = 20;
+  final int _pageSize = AppConstants.defaultPageSize;
   int _totalCount = 0;
   bool _hasMore = true;
 
