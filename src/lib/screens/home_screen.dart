@@ -19,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -28,22 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<StudentProvider>().loadStudents();
     });
-
-    // Setup infinite scroll listener
-    _scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      context.read<StudentProvider>().loadMoreStudents();
-    }
   }
 
   @override
   void dispose() {
     _searchController.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -360,46 +348,57 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: DataTable2(
-                                  columnSpacing: 40,
-                                  headingRowColor: WidgetStateProperty.all(
-                                    Colors.grey[200],
+                                child: NotificationListener<ScrollNotification>(
+                                  onNotification: (notification) {
+                                    if (notification.metrics.pixels >=
+                                        notification.metrics.maxScrollExtent -
+                                            200) {
+                                      provider.loadMoreStudents();
+                                    }
+                                    return false;
+                                  },
+                                  child: DataTable2(
+                                    columnSpacing: 40,
+                                    headingRowColor: WidgetStateProperty.all(
+                                      Colors.grey[200],
+                                    ),
+                                    horizontalMargin: 12,
+                                    minWidth: 600,
+                                    columns: [
+                                      DataColumn2(
+                                        label: _buildSortableHeader(
+                                          'Name',
+                                          'name',
+                                        ),
+                                        size: ColumnSize.L,
+                                      ),
+                                      DataColumn2(
+                                        label: _buildSortableHeader(
+                                          'Email',
+                                          'email',
+                                        ),
+                                        size: ColumnSize.L,
+                                      ),
+                                      DataColumn2(
+                                        label: _buildSortableHeader(
+                                          'Phone',
+                                          'phone',
+                                        ),
+                                        size: ColumnSize.M,
+                                      ),
+                                    ],
+                                    rows: provider.students.map((student) {
+                                      return DataRow2(
+                                        onTap: () =>
+                                            _showStudentDetail(student),
+                                        cells: [
+                                          DataCell(Text(student.name)),
+                                          DataCell(Text(student.email)),
+                                          DataCell(Text(student.phone)),
+                                        ],
+                                      );
+                                    }).toList(),
                                   ),
-                                  horizontalMargin: 12,
-                                  minWidth: 600,
-                                  columns: [
-                                    DataColumn2(
-                                      label: _buildSortableHeader(
-                                        'Name',
-                                        'name',
-                                      ),
-                                      size: ColumnSize.L,
-                                    ),
-                                    DataColumn2(
-                                      label: _buildSortableHeader(
-                                        'Email',
-                                        'email',
-                                      ),
-                                      size: ColumnSize.L,
-                                    ),
-                                    DataColumn2(
-                                      label: _buildSortableHeader(
-                                        'Phone',
-                                        'phone',
-                                      ),
-                                      size: ColumnSize.M,
-                                    ),
-                                  ],
-                                  rows: provider.students.map((student) {
-                                    return DataRow2(
-                                      onTap: () => _showStudentDetail(student),
-                                      cells: [
-                                        DataCell(Text(student.name)),
-                                        DataCell(Text(student.email)),
-                                        DataCell(Text(student.phone)),
-                                      ],
-                                    );
-                                  }).toList(),
                                 ),
                               ),
                             ),
