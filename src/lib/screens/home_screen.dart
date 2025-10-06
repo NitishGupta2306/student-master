@@ -3,13 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:data_table_2/data_table_2.dart';
 import '../services/student_provider.dart';
-import '../services/student_repository.dart';
 import '../services/csv_export_service.dart';
 import '../services/theme_provider.dart';
 import '../models/student.dart';
 import '../widgets/student_detail_dialog.dart';
 import '../widgets/student_form_dialog.dart';
-import '../utils/test_data_generator.dart';
 import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -75,7 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSortableHeader(String label, String column) {
     final provider = context.watch<StudentProvider>();
-    final themeProvider = context.watch<ThemeProvider>();
     final isActive = provider.sortBy == column;
 
     return InkWell(
