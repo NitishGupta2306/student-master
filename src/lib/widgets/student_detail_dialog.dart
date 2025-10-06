@@ -24,6 +24,7 @@ class StudentDetailDialog extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: const Text('Confirm Delete'),
         content: Text('Are you sure you want to delete ${student.name}?'),
         actions: [
@@ -84,6 +85,7 @@ class StudentDetailDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         width: 700,
         constraints: const BoxConstraints(maxHeight: 800),
@@ -93,7 +95,13 @@ class StudentDetailDialog extends StatelessWidget {
             // Header
             Container(
               padding: const EdgeInsets.all(16),
-              color: Theme.of(context).primaryColor,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
+              ),
               child: Row(
                 children: [
                   const Text(
