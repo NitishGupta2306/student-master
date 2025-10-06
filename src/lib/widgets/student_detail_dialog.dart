@@ -114,6 +114,11 @@ class StudentDetailDialog extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.white),
+                    onPressed: () => _confirmDelete(context),
+                    tooltip: 'Delete',
+                  ),
+                  IconButton(
                     icon: const Icon(Icons.edit, color: Colors.white),
                     onPressed: () => _showEditDialog(context),
                     tooltip: 'Edit',
@@ -289,26 +294,6 @@ class StudentDetailDialog extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ),
-
-            // Footer with Delete Button
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.grey[300]!)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    onPressed: () => _confirmDelete(context),
-                    icon: const Icon(Icons.delete),
-                    tooltip: 'Delete Student',
-                    color: Colors.red,
-                    iconSize: 28,
-                  ),
-                ],
               ),
             ),
           ],

@@ -9,6 +9,7 @@ import '../models/student.dart';
 import '../widgets/student_detail_dialog.dart';
 import '../widgets/student_form_dialog.dart';
 import '../utils/test_data_generator.dart';
+import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -146,7 +147,6 @@ class _HomeScreenState extends State<HomeScreen> {
             // Search and Action Bar
             Container(
               padding: const EdgeInsets.all(12),
-              color: Colors.grey[50],
               child: Card(
                 elevation: 2,
                 shape: RoundedRectangleBorder(
@@ -222,27 +222,50 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                             const SizedBox(height: 8),
-                            // Search bar
-                            TextField(
-                              controller: _searchController,
-                              decoration: InputDecoration(
-                                hintText: 'Search...',
-                                hintStyle: const TextStyle(fontSize: 13),
-                                prefixIcon: const Icon(Icons.search, size: 20),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                            // Search bar with settings button
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: _searchController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Search...',
+                                      hintStyle: const TextStyle(fontSize: 13),
+                                      prefixIcon: const Icon(
+                                        Icons.search,
+                                        size: 20,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            vertical: 6,
+                                          ),
+                                      isDense: true,
+                                    ),
+                                    style: const TextStyle(fontSize: 13),
+                                    onChanged: (value) {
+                                      context.read<StudentProvider>().search(
+                                        value,
+                                      );
+                                    },
+                                  ),
                                 ),
-                                filled: true,
-                                fillColor: Colors.grey[50],
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 6,
+                                const SizedBox(width: 8),
+                                IconButton(
+                                  icon: const Icon(Icons.settings),
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SettingsScreen(),
+                                      ),
+                                    );
+                                  },
+                                  tooltip: 'Settings',
                                 ),
-                                isDense: true,
-                              ),
-                              style: const TextStyle(fontSize: 13),
-                              onChanged: (value) {
-                                context.read<StudentProvider>().search(value);
-                              },
+                              ],
                             ),
                           ],
                         );
@@ -296,8 +319,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                filled: true,
-                                fillColor: Colors.grey[50],
                                 contentPadding: const EdgeInsets.symmetric(
                                   vertical: 6,
                                 ),
@@ -308,6 +329,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context.read<StudentProvider>().search(value);
                               },
                             ),
+                          ),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            icon: const Icon(Icons.settings),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingsScreen(),
+                                ),
+                              );
+                            },
+                            tooltip: 'Settings',
                           ),
                         ],
                       );
