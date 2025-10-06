@@ -1,0 +1,27 @@
+# Student Master Application - Root .gitignore
+
+# Claude Code
+.claude/
+
+# General
+.DS_Store
+*.log
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.local
+
+# IDE
+*.sublime-*
+*.code-workspace
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Backup files
+*.bak
+*.swp
+*~

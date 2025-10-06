@@ -1,0 +1,13 @@
+# Documentation - docs/ .gitignore
+
+# Generated documentation
+*.pdf
+*.docx
+
+# Temporary files
+*.tmp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
