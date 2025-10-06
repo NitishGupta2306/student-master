@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class FileStorageService {
   static final FileStorageService instance = FileStorageService._init();
@@ -23,12 +24,25 @@ class FileStorageService {
   /// Save a photo file and return the path
   Future<String> savePhoto(File sourceFile, String studentId) async {
     final dir = await _appDirectory;
-    final extension = path.extension(sourceFile.path);
-    final fileName = '${studentId}_photo$extension';
+    final fileName = '${studentId}_photo.jpg';
     final targetPath = path.join(dir.path, fileName);
 
-    // Copy file to app directory
-    await sourceFile.copy(targetPath);
+    // Compress and save image
+    final compressedBytes = await FlutterImageCompress.compressWithFile(
+      sourceFile.absolute.path,
+      minWidth: 1024,
+      minHeight: 1024,
+      quality: 85,
+      format: CompressFormat.jpeg,
+    );
+
+    if (compressedBytes != null) {
+      final targetFile = File(targetPath);
+      await targetFile.writeAsBytes(compressedBytes);
+    } else {
+      // Fallback: copy original if compression fails
+      await sourceFile.copy(targetPath);
+    }
 
     return targetPath;
   }
