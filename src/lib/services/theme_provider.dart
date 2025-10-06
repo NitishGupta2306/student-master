@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../constants/app_colors.dart';
 
 class ThemeProvider extends ChangeNotifier {
   bool _isDarkMode = false;
@@ -25,31 +26,59 @@ class ThemeProvider extends ChangeNotifier {
 
   ThemeData get lightTheme => ThemeData(
     useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.blue,
-      brightness: Brightness.light,
+    colorScheme: ColorScheme.light(
+      primary: AppColors.primary,
+      primaryContainer: AppColors.primaryVariant,
+      secondary: AppColors.secondary,
+      secondaryContainer: AppColors.secondaryVariant,
+      error: AppColors.error,
+      onPrimary: AppColors.onPrimary,
+      onSecondary: AppColors.onSecondary,
+      onError: AppColors.onError,
+      surface: AppColors.lightSurface,
+      onSurface: AppColors.onSurface,
     ),
-    scaffoldBackgroundColor: Colors.grey[50],
+    scaffoldBackgroundColor: AppColors.lightBackground,
     cardTheme: CardThemeData(
       elevation: 2,
+      color: AppColors.lightCardBackground,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    dataTableTheme: DataTableThemeData(
+      headingRowColor: WidgetStateProperty.all(AppColors.lightTableHeader),
+      headingTextStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
     ),
   );
 
   ThemeData get darkTheme => ThemeData(
     useMaterial3: true,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.blue,
-      brightness: Brightness.dark,
+    colorScheme: ColorScheme.dark(
+      primary: AppColors.primary,
+      primaryContainer: AppColors.primaryVariant,
+      secondary: AppColors.secondary,
+      secondaryContainer: AppColors.secondaryVariant,
+      error: AppColors.error,
+      onPrimary: AppColors.onPrimary,
+      onSecondary: AppColors.onSecondary,
+      onError: AppColors.onError,
+      surface: AppColors.darkSurface,
+      onSurface: Colors.white,
     ),
-    scaffoldBackgroundColor: const Color(0xFF121212),
+    scaffoldBackgroundColor: AppColors.darkBackground,
     cardTheme: CardThemeData(
       elevation: 2,
-      color: const Color(0xFF1E1E1E),
+      color: AppColors.darkCardBackground,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
     dataTableTheme: DataTableThemeData(
-      headingRowColor: WidgetStateProperty.all(const Color(0xFF2C2C2C)),
+      headingRowColor: WidgetStateProperty.all(AppColors.darkTableHeader),
+      headingTextStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
     ),
   );
 

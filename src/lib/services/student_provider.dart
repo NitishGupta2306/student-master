@@ -197,4 +197,12 @@ class StudentProvider extends ChangeNotifier {
     );
     await loadStudents();
   }
+
+  /// Delete all students
+  Future<void> deleteAllStudents() async {
+    for (final student in _students) {
+      await _repository.deleteStudent(student.id);
+    }
+    await loadStudents();
+  }
 }

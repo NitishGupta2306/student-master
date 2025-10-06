@@ -13,7 +13,8 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -140,6 +141,69 @@ class SettingsScreen extends StatelessWidget {
                         },
                         icon: const Icon(Icons.add),
                         label: const Text('Generate'),
+                      ),
+                    ),
+                    const Divider(height: 32),
+                    ListTile(
+                      leading: const Icon(
+                        Icons.delete_sweep,
+                        color: Colors.red,
+                      ),
+                      title: const Text('Delete All Students'),
+                      subtitle: const Text(
+                        'Remove all students from the database',
+                      ),
+                      trailing: ElevatedButton.icon(
+                        onPressed: () async {
+                          final confirmed = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              title: const Text('Delete All Students'),
+                              content: const Text(
+                                'This will permanently delete all students from the database. This action cannot be undone. Continue?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.red,
+                                  ),
+                                  child: const Text('Delete All'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (confirmed == true && context.mounted) {
+                            await context
+                                .read<StudentProvider>()
+                                .deleteAllStudents();
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'All students deleted successfully',
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        icon: const Icon(Icons.delete),
+                        label: const Text('Delete All'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                        ),
                       ),
                     ),
                   ],
