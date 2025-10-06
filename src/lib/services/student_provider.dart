@@ -1,21 +1,26 @@
 import 'package:flutter/foundation.dart';
 import '../models/student.dart';
 import 'student_repository.dart';
+import '../utils/test_data_generator.dart';
+import '../constants/app_constants.dart';
 
 class StudentProvider extends ChangeNotifier {
   final StudentRepository _repository = StudentRepository();
 
   List<Student> _students = [];
   bool _isLoading = false;
+  bool _isLoadingMore = false;
   String _searchQuery = '';
   String _sortBy = 'name';
   bool _sortAscending = true;
   int _currentPage = 0;
-  final int _pageSize = 10;
+  final int _pageSize = AppConstants.defaultPageSize;
   int _totalCount = 0;
+  bool _hasMore = true;
 
   List<Student> get students => _students;
   bool get isLoading => _isLoading;
+  bool get isLoadingMore => _isLoadingMore;
   String get searchQuery => _searchQuery;
   String get sortBy => _sortBy;
   bool get sortAscending => _sortAscending;
@@ -23,30 +28,70 @@ class StudentProvider extends ChangeNotifier {
   int get pageSize => _pageSize;
   int get totalCount => _totalCount;
   int get totalPages => (_totalCount / _pageSize).ceil();
+  bool get hasMore => _hasMore;
 
-  /// Load students with current filters
+  /// Load students with current filters (initial load)
   Future<void> loadStudents() async {
     _isLoading = true;
+    _currentPage = 0;
+    _hasMore = true;
     notifyListeners();
 
     try {
-      // Get total count for pagination
+      // Get total count
       _totalCount = await _repository.getStudentCount(
         searchQuery: _searchQuery,
       );
 
-      // Get students for current page
+      // Get first page of students
       _students = await _repository.getAllStudents(
+        searchQuery: _searchQuery,
+        sortBy: _sortBy,
+        ascending: _sortAscending,
+        limit: _pageSize,
+        offset: 0,
+      );
+
+      _hasMore = _students.length >= _pageSize;
+    } catch (e) {
+      debugPrint('Error loading students: $e');
+      _students = [];
+      _totalCount = 0;
+      _hasMore = false;
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// Load more students for infinite scroll
+  Future<void> loadMoreStudents() async {
+    if (_isLoadingMore || !_hasMore) return;
+
+    _isLoadingMore = true;
+    notifyListeners();
+
+    try {
+      _currentPage++;
+
+      final moreStudents = await _repository.getAllStudents(
         searchQuery: _searchQuery,
         sortBy: _sortBy,
         ascending: _sortAscending,
         limit: _pageSize,
         offset: _currentPage * _pageSize,
       );
+
+      _students.addAll(moreStudents);
+      _hasMore = moreStudents.length >= _pageSize;
     } catch (e) {
-      debugPrint('Error loading students: $e');
+      debugPrint('Error loading more students: $e');
+      _currentPage--; // Revert page increment on error
+      _hasMore = false;
+      rethrow;
     } finally {
-      _isLoading = false;
+      _isLoadingMore = false;
       notifyListeners();
     }
   }
@@ -148,6 +193,23 @@ class StudentProvider extends ChangeNotifier {
 
   /// Refresh students list
   Future<void> refresh() async {
+    await loadStudents();
+  }
+
+  /// Generate test data
+  Future<void> generateTestData({int count = 50}) async {
+    await TestDataGenerator.generateTestData(
+      repository: _repository,
+      count: count,
+    );
+    await loadStudents();
+  }
+
+  /// Delete all students
+  Future<void> deleteAllStudents() async {
+    for (final student in _students) {
+      await _repository.deleteStudent(student.id);
+    }
     await loadStudents();
   }
 }

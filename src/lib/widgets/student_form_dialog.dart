@@ -8,6 +8,7 @@ import '../models/student.dart';
 import '../services/student_provider.dart';
 import '../services/file_storage_service.dart';
 import '../utils/validators.dart';
+import '../constants/app_constants.dart';
 
 class StudentFormDialog extends StatefulWidget {
   final Student? student; // If null, create mode; if not null, edit mode
@@ -56,17 +57,17 @@ class _StudentFormDialogState extends State<StudentFormDialog> {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png'],
+        allowedExtensions: AppConstants.allowedImageExtensions,
       );
 
       if (result != null && result.files.single.path != null) {
         final file = File(result.files.single.path!);
         final fileSize = await file.length();
 
-        // Check file size (5 MB max)
+        // Check file size
         final sizeError = Validators.validateFileSize(
           fileSize,
-          5 * 1024 * 1024,
+          AppConstants.maxPhotoSizeBytes,
           'Photo',
         );
         if (sizeError != null) {
@@ -90,7 +91,7 @@ class _StudentFormDialogState extends State<StudentFormDialog> {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['mp4', 'mov', 'avi'],
+        allowedExtensions: AppConstants.allowedVideoExtensions,
       );
 
       if (result != null && result.files.single.path != null) {
@@ -104,8 +105,8 @@ class _StudentFormDialogState extends State<StudentFormDialog> {
 
         final durationError = Validators.validateVideoDuration(
           duration,
-          600,
-        ); // 10 minutes
+          AppConstants.maxVideoDurationSeconds,
+        );
         if (durationError != null) {
           if (mounted) {
             Fluttertoast.showToast(
@@ -207,9 +208,22 @@ class _StudentFormDialogState extends State<StudentFormDialog> {
         Navigator.of(context).pop();
       }
     } catch (e) {
+      String errorMessage = 'Save failed';
+      if (e.toString().contains('Email already exists')) {
+        errorMessage = 'This email is already registered';
+      } else if (e.toString().contains('Phone number already exists')) {
+        errorMessage = 'This phone number is already registered';
+      } else if (e.toString().contains('Student not found')) {
+        errorMessage = 'Student not found';
+      } else {
+        errorMessage =
+            'Save failed: ${e.toString().replaceAll('Exception: ', '')}';
+      }
+
       Fluttertoast.showToast(
-        msg: 'Save failed: $e',
+        msg: errorMessage,
         backgroundColor: Colors.red,
+        toastLength: Toast.LENGTH_LONG,
       );
     } finally {
       if (mounted) {
@@ -223,6 +237,7 @@ class _StudentFormDialogState extends State<StudentFormDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         width: 600,
         constraints: const BoxConstraints(maxHeight: 700),
@@ -232,7 +247,13 @@ class _StudentFormDialogState extends State<StudentFormDialog> {
             // Header
             Container(
               padding: const EdgeInsets.all(16),
-              color: Theme.of(context).primaryColor,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
+              ),
               child: Row(
                 children: [
                   Text(

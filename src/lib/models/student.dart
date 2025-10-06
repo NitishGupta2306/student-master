@@ -1,13 +1,34 @@
+/// Represents a student entity in the system.
+///
+/// Each student has a unique ID in the format STU-YYYY-NNNN, where YYYY is the
+/// current year and NNNN is a sequential number. Students can have optional
+/// photo and video attachments stored as file paths.
 class Student {
-  final String id; // Format: STU-YYYY-NNNN (immutable)
+  /// Unique student ID in format STU-YYYY-NNNN (immutable)
+  final String id;
+
+  /// Student's full name
   final String name;
+
+  /// Student's email address (unique)
   final String email;
+
+  /// Student's phone number in format +91 XXXXXXXXXX (unique)
   final String phone;
+
+  /// Optional path to student's photo file
   final String? photoPath;
+
+  /// Optional path to student's video file
   final String? videoPath;
+
+  /// Timestamp when the student was created
   final DateTime createdAt;
+
+  /// Timestamp when the student was last updated
   final DateTime updatedAt;
 
+  /// Creates a new [Student] instance.
   Student({
     required this.id,
     required this.name,
@@ -19,7 +40,7 @@ class Student {
     required this.updatedAt,
   });
 
-  // Convert Student to Map for database
+  /// Converts this student to a Map for database storage.
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -33,7 +54,7 @@ class Student {
     };
   }
 
-  // Create Student from Map (database row)
+  /// Creates a [Student] from a database Map.
   factory Student.fromMap(Map<String, dynamic> map) {
     return Student(
       id: map['id'] as String,
@@ -47,7 +68,7 @@ class Student {
     );
   }
 
-  // Create a copy with updated fields
+  /// Creates a copy of this student with the given fields replaced.
   Student copyWith({
     String? id,
     String? name,
