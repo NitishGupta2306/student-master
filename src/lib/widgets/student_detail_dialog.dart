@@ -144,86 +144,82 @@ class StudentDetailDialog extends StatelessWidget {
                         padding: const EdgeInsets.all(20),
                         child: LayoutBuilder(
                           builder: (context, constraints) {
-                            // Use smaller photo on narrow screens
-                            final photoWidth = constraints.maxWidth < 400
-                                ? 100.0
-                                : 200.0;
-                            final photoHeight = constraints.maxWidth < 400
-                                ? 120.0
-                                : 250.0;
-                            final spacing = constraints.maxWidth < 400
-                                ? 12.0
-                                : 24.0;
+                            final isNarrow = constraints.maxWidth < 500;
+                            const photoWidth = 200.0;
+                            const photoHeight = 250.0;
 
-                            return Row(
+                            final photoWidget = Container(
+                              width: photoWidth,
+                              height: photoHeight,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.grey[300]!),
+                              ),
+                              child:
+                                  student.photoPath != null &&
+                                      student.photoPath!.isNotEmpty &&
+                                      File(student.photoPath!).existsSync()
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.file(
+                                        File(student.photoPath!),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.person_outline,
+                                            size: 64,
+                                            color: Colors.grey[400],
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'No photo',
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                            );
+
+                            final infoWidget = Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Photo on Left
-                                Container(
-                                  width: photoWidth,
-                                  height: photoHeight,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[100],
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.grey[300]!,
-                                    ),
-                                  ),
-                                  child:
-                                      student.photoPath != null &&
-                                          student.photoPath!.isNotEmpty &&
-                                          File(student.photoPath!).existsSync()
-                                      ? ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          child: Image.file(
-                                            File(student.photoPath!),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        )
-                                      : Center(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.person_outline,
-                                                size: constraints.maxWidth < 400
-                                                    ? 40.0
-                                                    : 64.0,
-                                                color: Colors.grey[400],
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                'No photo',
-                                                style: TextStyle(
-                                                  color: Colors.grey[600],
-                                                  fontSize: 10,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                ),
-
-                                SizedBox(width: spacing),
-
-                                // Info on Right
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      _buildInfoRow('ID:', student.id),
-                                      _buildInfoRow('Name:', student.name),
-                                      _buildInfoRow('Email:', student.email),
-                                      _buildInfoRow('Phone:', student.phone),
-                                    ],
-                                  ),
-                                ),
+                                _buildInfoRow('ID:', student.id),
+                                _buildInfoRow('Name:', student.name),
+                                _buildInfoRow('Email:', student.email),
+                                _buildInfoRow('Phone:', student.phone),
                               ],
                             );
+
+                            // Use Column for narrow screens, Row for wide
+                            if (isNarrow) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  photoWidget,
+                                  const SizedBox(height: 16),
+                                  infoWidget,
+                                ],
+                              );
+                            } else {
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  photoWidget,
+                                  const SizedBox(width: 24),
+                                  Expanded(child: infoWidget),
+                                ],
+                              );
+                            }
                           },
                         ),
                       ),
@@ -305,14 +301,12 @@ class StudentDetailDialog extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton.icon(
+                  IconButton(
                     onPressed: () => _confirmDelete(context),
                     icon: const Icon(Icons.delete),
-                    label: const Text('Delete Student'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
+                    tooltip: 'Delete Student',
+                    color: Colors.red,
+                    iconSize: 28,
                   ),
                 ],
               ),
