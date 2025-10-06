@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../models/student.dart';
 import 'student_repository.dart';
+import '../utils/test_data_generator.dart';
 
 class StudentProvider extends ChangeNotifier {
   final StudentRepository _repository = StudentRepository();
@@ -185,6 +186,23 @@ class StudentProvider extends ChangeNotifier {
 
   /// Refresh students list
   Future<void> refresh() async {
+    await loadStudents();
+  }
+
+  /// Generate test data
+  Future<void> generateTestData({int count = 50}) async {
+    await TestDataGenerator.generateTestData(
+      repository: _repository,
+      count: count,
+    );
+    await loadStudents();
+  }
+
+  /// Delete all students
+  Future<void> deleteAllStudents() async {
+    for (final student in _students) {
+      await _repository.deleteStudent(student.id);
+    }
     await loadStudents();
   }
 }
