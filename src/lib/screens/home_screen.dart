@@ -151,229 +151,229 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          // Search and Action Bar
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            color: Colors.grey[100],
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                // Mobile layout (portrait)
-                if (constraints.maxWidth < 600) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Search bar
-                      TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search...',
-                          hintStyle: const TextStyle(fontSize: 13),
-                          prefixIcon: const Icon(Icons.search, size: 20),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Search and Action Bar
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              color: Colors.grey[100],
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Mobile layout (portrait)
+                  if (constraints.maxWidth < 600) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Search bar
+                        TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: 'Search...',
+                            hintStyle: const TextStyle(fontSize: 13),
+                            prefixIcon: const Icon(Icons.search, size: 20),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 6,
+                            ),
+                            isDense: true,
                           ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 6,
-                          ),
-                          isDense: true,
+                          style: const TextStyle(fontSize: 13),
+                          onChanged: (value) {
+                            context.read<StudentProvider>().search(value);
+                          },
                         ),
-                        style: const TextStyle(fontSize: 13),
-                        onChanged: (value) {
-                          context.read<StudentProvider>().search(value);
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      // Action buttons row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: _showAddStudentDialog,
-                              icon: const Icon(Icons.add, size: 16),
-                              label: const Text(
-                                'Add',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 8,
+                        const SizedBox(height: 8),
+                        // Action buttons row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: _showAddStudentDialog,
+                                icon: const Icon(Icons.add, size: 16),
+                                label: const Text(
+                                  'Add',
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 8,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: _exportToCSV,
-                              icon: const Icon(Icons.download, size: 16),
-                              label: const Text(
-                                'Export',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 8,
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: _exportToCSV,
+                                icon: const Icon(Icons.download, size: 16),
+                                label: const Text(
+                                  'Export',
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 8,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: ElevatedButton.icon(
-                              onPressed: _generateTestData,
-                              icon: const Icon(Icons.science, size: 16),
-                              label: const Text(
-                                'Test',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 8,
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: _generateTestData,
+                                icon: const Icon(Icons.science, size: 16),
+                                label: const Text(
+                                  'Test',
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 8,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                }
-
-                // Desktop/Tablet layout (landscape or wide screens)
-                return Row(
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: _showAddStudentDialog,
-                      icon: const Icon(Icons.add),
-                      label: const Text('Add New Student'),
-                    ),
-                    const SizedBox(width: 16),
-                    ElevatedButton.icon(
-                      onPressed: _exportToCSV,
-                      icon: const Icon(Icons.download),
-                      label: const Text('Export CSV'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    ElevatedButton.icon(
-                      onPressed: _generateTestData,
-                      icon: const Icon(Icons.science),
-                      label: const Text('Generate Test Data'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                    const Spacer(),
-                    SizedBox(
-                      width: 300,
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search by name, email, or phone...',
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                          ),
-                        ),
-                        onChanged: (value) {
-                          context.read<StudentProvider>().search(value);
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-
-          // Student Table
-          Expanded(
-            child: Consumer<StudentProvider>(
-              builder: (context, provider, child) {
-                if (provider.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (provider.students.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No students found',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                  );
-                }
-
-                return SingleChildScrollView(
-                  controller: _scrollController,
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: [
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          columnSpacing: 40,
-                          headingRowColor: WidgetStateProperty.all(
-                            Colors.grey[200],
-                          ),
-                          columns: [
-                            DataColumn(label: _buildSortableHeader('ID', 'id')),
-                            DataColumn(
-                              label: _buildSortableHeader('Name', 'name'),
-                            ),
-                            DataColumn(
-                              label: _buildSortableHeader('Email', 'email'),
-                            ),
-                            DataColumn(
-                              label: _buildSortableHeader('Phone', 'phone'),
                             ),
                           ],
-                          rows: provider.students.map((student) {
-                            return DataRow(
-                              onSelectChanged: (_) =>
-                                  _showStudentDetail(student),
-                              cells: [
-                                DataCell(Text(student.id)),
-                                DataCell(Text(student.name)),
-                                DataCell(Text(student.email)),
-                                DataCell(Text(student.phone)),
-                              ],
-                            );
-                          }).toList(),
+                        ),
+                      ],
+                    );
+                  }
+
+                  // Desktop/Tablet layout (landscape or wide screens)
+                  return Row(
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: _showAddStudentDialog,
+                        icon: const Icon(Icons.add),
+                        label: const Text('Add New Student'),
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton.icon(
+                        onPressed: _exportToCSV,
+                        icon: const Icon(Icons.download),
+                        label: const Text('Export CSV'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
                         ),
                       ),
-                      if (provider.isLoadingMore)
-                        const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: CircularProgressIndicator(),
+                      const SizedBox(width: 16),
+                      ElevatedButton.icon(
+                        onPressed: _generateTestData,
+                        icon: const Icon(Icons.science),
+                        label: const Text('Generate Test Data'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
                         ),
+                      ),
+                      const Spacer(),
+                      SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: 'Search by name, email, or phone...',
+                            prefixIcon: const Icon(Icons.search),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                            ),
+                          ),
+                          onChanged: (value) {
+                            context.read<StudentProvider>().search(value);
+                          },
+                        ),
+                      ),
                     ],
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+
+            // Student Table
+            Expanded(
+              child: Consumer<StudentProvider>(
+                builder: (context, provider, child) {
+                  if (provider.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (provider.students.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'No students found',
+                        style: TextStyle(fontSize: 18, color: Colors.grey),
+                      ),
+                    );
+                  }
+
+                  return SingleChildScrollView(
+                    controller: _scrollController,
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      children: [
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: DataTable(
+                            columnSpacing: 40,
+                            headingRowColor: WidgetStateProperty.all(
+                              Colors.grey[200],
+                            ),
+                            columns: [
+                              DataColumn(
+                                label: _buildSortableHeader('Name', 'name'),
+                              ),
+                              DataColumn(
+                                label: _buildSortableHeader('Email', 'email'),
+                              ),
+                              DataColumn(
+                                label: _buildSortableHeader('Phone', 'phone'),
+                              ),
+                            ],
+                            rows: provider.students.map((student) {
+                              return DataRow(
+                                onSelectChanged: (_) =>
+                                    _showStudentDetail(student),
+                                cells: [
+                                  DataCell(Text(student.name)),
+                                  DataCell(Text(student.email)),
+                                  DataCell(Text(student.phone)),
+                                ],
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        if (provider.isLoadingMore)
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
