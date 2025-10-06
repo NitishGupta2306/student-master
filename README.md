@@ -88,8 +88,8 @@ See `src/assets/ICON_INSTRUCTIONS.md` for icon generation instructions.
 
 ## Version
 
-**1.0.0** - Last Updated: 2025-10-06
+**1.2.0+2** - Last Updated: 2025-10-06
 
 ## License
 
-Created for university use. All rights reserved.
+Personal project. MIT License.

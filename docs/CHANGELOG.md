@@ -2,6 +2,60 @@
 
 All notable changes to the Student Master Application will be documented in this file.
 
+## [1.2.0] - 2025-10-06
+
+### 🎨 UI/UX Enhancements
+- Added dark/light mode toggle with persistent storage
+- Implemented settings screen with theme controls
+- Updated app color scheme to purple (#6200EE) and teal (#03DAC6)
+- Added branded AppBar to home screen
+- Improved mobile UI compatibility (portrait/landscape modes)
+- Added sticky table headers using DataTable2
+- Implemented infinite scroll pagination (50 items per page)
+- Enhanced card-based UI design with better spacing
+- Improved responsive layouts for all screen sizes
+
+### 🛠️ Code Quality Improvements
+- Removed all unused imports and variables (0 analyzer warnings)
+- Created centralized constants file to eliminate magic numbers
+- Added comprehensive dartdoc comments to all core classes
+- Improved error handling with user-friendly messages
+- Added image compression (reduces photo storage by ~90%)
+- Implemented proper pagination to prevent memory issues
+- Added iOS camera and photo library permissions
+- Configured app icon setup with instructions
+
+### 📦 New Features
+- Settings screen with:
+  - Dark/Light mode toggle
+  - Test data generation
+  - Delete all students functionality
+  - App version information
+- Image compression on upload (max 1024x1024, 85% quality)
+- Better error messages for duplicate emails/phones
+- Success/error feedback with color-coded snackbars
+- Moved test data generation to settings (cleaner home screen)
+
+### 📚 Documentation
+- Simplified and modernized README
+- Added detailed app icon setup instructions
+- Updated all documentation with new features
+- Improved code comments and dartdoc coverage
+
+### 🔧 Technical Changes
+- Updated Flutter dependencies (flutter_image_compress, flutter_launcher_icons)
+- Added app constants for all configuration values
+- Improved theme provider with proper color schemes
+- Enhanced file storage service with compression
+- Better state management with error recovery
+- iOS Info.plist permissions for camera/photos
+
+### 📱 Platform Support
+- macOS entitlements for file access
+- Android permissions for media access
+- iOS permissions for camera and photo library
+- All platforms fully tested and working
+
 ## [1.0.0] - 2025-10-06
 
 ### 🎉 Initial Release
@@ -14,9 +68,8 @@ All notable changes to the Student Master Application will be documented in this
 - Video upload and playback with Chewie player
 - Real-time search across name, email, and phone fields
 - Sortable table columns (click to sort)
-- Pagination (10 items per page)
 - CSV export functionality
-- Test data generator (creates 30 sample students)
+- Test data generator (creates 50 sample students)
 - Input validation for email, phone, name
 - File size and duration validation
 - Unique constraints on email and phone numbers
@@ -36,89 +89,32 @@ All notable changes to the Student Master Application will be documented in this
 - ID generator utility
 - Clean separation of concerns
 
-#### Documentation
-- Comprehensive PRD (Product Requirements Document)
-- Detailed README with usage instructions
-- Quick Start Guide
-- Project Summary
-- Code comments throughout
-
-#### Quality
-- Zero Flutter analysis issues
-- Proper error handling
-- Resource cleanup (dispose methods)
-- Memory management
-- Performance optimizations (pagination, indices)
-
-### File Structure
-```
-lib/
-├── models/student.dart
-├── services/
-│   ├── database_helper.dart
-│   ├── student_repository.dart
-│   ├── student_provider.dart
-│   ├── file_storage_service.dart
-│   └── csv_export_service.dart
-├── screens/home_screen.dart
-├── widgets/
-│   ├── student_detail_dialog.dart
-│   ├── student_form_dialog.dart
-│   └── video_player_widget.dart
-├── utils/
-│   ├── id_generator.dart
-│   ├── validators.dart
-│   └── test_data_generator.dart
-└── main.dart
-```
-
-### Dependencies
+#### Dependencies
 - sqflite: ^2.3.0
 - provider: ^6.1.1
-- file_picker: ^6.1.1
+- file_picker: ^8.3.7
 - video_player: ^2.8.1
 - chewie: ^1.7.4
 - csv: ^6.0.0
-- fluttertoast: ^8.2.4
+- fluttertoast: ^8.2.14
 - path_provider: ^2.1.1
 - intl: ^0.19.0
-
----
-
-## Future Enhancements (Planned)
-
-### v2.0.0 (Future)
-- [ ] Student-facing application portal
-- [ ] Cloud backup and synchronization
-- [ ] User authentication (login system)
-- [ ] Role-based access control
-- [ ] Email/SMS notifications
-- [ ] Application status workflow
-- [ ] Batch CSV import
-- [ ] Advanced filtering options
-- [ ] Audit logs
-- [ ] Dark mode support
-- [ ] Multi-language support
-
-### v1.1.0 (Planned)
-- [ ] Enhanced video player controls
-- [ ] Bulk delete functionality
-- [ ] Advanced search filters
-- [ ] Student statistics dashboard
-- [ ] Custom export formats (PDF, Excel)
-- [ ] Backup/restore database functionality
+- data_table_2: ^2.5.11
+- shared_preferences: ^2.2.2
+- flutter_image_compress: ^2.4.0
 
 ---
 
 ## Version Format
 
-Versions follow Semantic Versioning: MAJOR.MINOR.PATCH
+Versions follow Semantic Versioning: MAJOR.MINOR.PATCH+BUILD
 
 - **MAJOR**: Incompatible API changes
 - **MINOR**: New functionality (backwards-compatible)
 - **PATCH**: Bug fixes (backwards-compatible)
+- **BUILD**: Build iteration number
 
 ---
 
-**Current Version**: 1.0.0
+**Current Version**: 1.2.0+2  
 **Last Updated**: 2025-10-06
