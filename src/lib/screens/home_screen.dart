@@ -311,26 +311,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 return SingleChildScrollView(
-                  child: DataTable(
-                    columnSpacing: 40,
-                    headingRowColor: WidgetStateProperty.all(Colors.grey[200]),
-                    columns: [
-                      DataColumn(label: _buildSortableHeader('ID', 'id')),
-                      DataColumn(label: _buildSortableHeader('Name', 'name')),
-                      DataColumn(label: _buildSortableHeader('Email', 'email')),
-                      DataColumn(label: _buildSortableHeader('Phone', 'phone')),
-                    ],
-                    rows: provider.students.map((student) {
-                      return DataRow(
-                        onSelectChanged: (_) => _showStudentDetail(student),
-                        cells: [
-                          DataCell(Text(student.id)),
-                          DataCell(Text(student.name)),
-                          DataCell(Text(student.email)),
-                          DataCell(Text(student.phone)),
-                        ],
-                      );
-                    }).toList(),
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columnSpacing: 40,
+                      headingRowColor: WidgetStateProperty.all(
+                        Colors.grey[200],
+                      ),
+                      columns: [
+                        DataColumn(label: _buildSortableHeader('ID', 'id')),
+                        DataColumn(label: _buildSortableHeader('Name', 'name')),
+                        DataColumn(
+                          label: _buildSortableHeader('Email', 'email'),
+                        ),
+                        DataColumn(
+                          label: _buildSortableHeader('Phone', 'phone'),
+                        ),
+                      ],
+                      rows: provider.students.map((student) {
+                        return DataRow(
+                          onSelectChanged: (_) => _showStudentDetail(student),
+                          cells: [
+                            DataCell(Text(student.id)),
+                            DataCell(Text(student.name)),
+                            DataCell(Text(student.email)),
+                            DataCell(Text(student.phone)),
+                          ],
+                        );
+                      }).toList(),
+                    ),
                   ),
                 );
               },
