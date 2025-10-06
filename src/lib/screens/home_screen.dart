@@ -3,13 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:data_table_2/data_table_2.dart';
 import '../services/student_provider.dart';
-import '../services/student_repository.dart';
 import '../services/csv_export_service.dart';
 import '../services/theme_provider.dart';
 import '../models/student.dart';
 import '../widgets/student_detail_dialog.dart';
 import '../widgets/student_form_dialog.dart';
-import '../utils/test_data_generator.dart';
+import '../constants/app_constants.dart';
 import 'settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -51,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } catch (e) {
       Fluttertoast.showToast(
-        msg: 'Export failed: $e',
-        toastLength: Toast.LENGTH_SHORT,
+        msg: 'Export failed: ${e.toString().replaceAll('Exception: ', '')}',
+        toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
       );
@@ -75,7 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSortableHeader(String label, String column) {
     final provider = context.watch<StudentProvider>();
-    final themeProvider = context.watch<ThemeProvider>();
     final isActive = provider.sortBy == column;
 
     return InkWell(
@@ -317,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onNotification: (notification) {
                                 if (notification.metrics.pixels >=
                                     notification.metrics.maxScrollExtent -
-                                        200) {
+                                        AppConstants.loadMoreThreshold) {
                                   provider.loadMoreStudents();
                                 }
                                 return false;

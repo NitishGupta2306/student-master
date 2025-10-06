@@ -1,15 +1,22 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import '../constants/app_constants.dart';
 
+/// SQLite database helper singleton for managing student data.
+///
+/// Provides methods for database initialization, creation, and cleanup.
+/// Uses singleton pattern to ensure only one database connection exists.
 class DatabaseHelper {
+  /// Singleton instance of [DatabaseHelper]
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
 
   DatabaseHelper._init();
 
+  /// Gets the database instance, creating it if necessary.
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDB('students.db');
+    _database = await _initDB(AppConstants.databaseName);
     return _database!;
   }
 
@@ -17,7 +24,11 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(
+      path,
+      version: AppConstants.databaseVersion,
+      onCreate: _createDB,
+    );
   }
 
   Future<void> _createDB(Database db, int version) async {
@@ -48,7 +59,7 @@ class DatabaseHelper {
   // Reset database (for testing purposes)
   Future<void> resetDatabase() async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'students.db');
+    final path = join(dbPath, AppConstants.databaseName);
     await deleteDatabase(path);
     _database = null;
   }
