@@ -1,7 +1,13 @@
 import '../constants/app_constants.dart';
 
+/// Utility class for validating user input throughout the application.
+///
+/// Provides static methods for validating emails, phone numbers, names,
+/// file sizes, and file extensions.
 class Validators {
-  /// Validate email format
+  /// Validates email format using RFC 5322 compliant regex.
+  ///
+  /// Returns an error message if invalid, null if valid.
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -19,7 +25,9 @@ class Validators {
     return null;
   }
 
-  /// Validate Indian phone number format: +91 XXXXXXXXXX
+  /// Validates Indian phone number format: +91 XXXXXXXXXX.
+  ///
+  /// Returns an error message if invalid, null if valid.
   static String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return 'Phone number is required';
@@ -38,7 +46,9 @@ class Validators {
     return null;
   }
 
-  /// Validate name (not empty)
+  /// Validates student name is not empty and meets minimum length.
+  ///
+  /// Returns an error message if invalid, null if valid.
   static String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Name is required';
@@ -51,7 +61,7 @@ class Validators {
     return null;
   }
 
-  /// Format phone number with space after country code
+  /// Formats phone number with space after country code (+91 XXXXXXXXXX).
   static String formatPhoneNumber(String phone) {
     final cleaned = phone.replaceAll(' ', '');
     if (cleaned.startsWith('+91') && cleaned.length == 13) {
@@ -60,7 +70,9 @@ class Validators {
     return phone;
   }
 
-  /// Validate file size in bytes
+  /// Validates file size is within allowed limit.
+  ///
+  /// Returns an error message if file exceeds [maxBytes], null if valid.
   static String? validateFileSize(int bytes, int maxBytes, String fileType) {
     if (bytes > maxBytes) {
       final maxMB = (maxBytes / (1024 * 1024)).toStringAsFixed(1);
@@ -69,7 +81,9 @@ class Validators {
     return null;
   }
 
-  /// Validate video duration in seconds
+  /// Validates video duration is within allowed limit.
+  ///
+  /// Returns an error message if video exceeds [maxSeconds], null if valid.
   static String? validateVideoDuration(int seconds, int maxSeconds) {
     if (seconds > maxSeconds) {
       final maxMinutes = (maxSeconds / 60).round();
@@ -78,13 +92,13 @@ class Validators {
     return null;
   }
 
-  /// Check if file extension is valid
+  /// Checks if the file has a valid image extension (jpg, jpeg, png).
   static bool isValidImageExtension(String filename) {
     final ext = filename.toLowerCase().split('.').last;
     return AppConstants.allowedImageExtensions.contains(ext);
   }
 
-  /// Check if video extension is valid
+  /// Checks if the file has a valid video extension (mp4, mov, avi).
   static bool isValidVideoExtension(String filename) {
     final ext = filename.toLowerCase().split('.').last;
     return AppConstants.allowedVideoExtensions.contains(ext);
