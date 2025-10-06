@@ -149,54 +149,147 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             color: Colors.grey[100],
-            child: Row(
-              children: [
-                ElevatedButton.icon(
-                  onPressed: _showAddStudentDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add New Student'),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton.icon(
-                  onPressed: _exportToCSV,
-                  icon: const Icon(Icons.download),
-                  label: const Text('Export CSV'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton.icon(
-                  onPressed: _generateTestData,
-                  icon: const Icon(Icons.science),
-                  label: const Text('Generate Test Data'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-                const Spacer(),
-                SizedBox(
-                  width: 300,
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search by name, email, or phone...',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Mobile layout (portrait)
+                if (constraints.maxWidth < 600) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Search bar
+                      TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search...',
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                          ),
+                        ),
+                        onChanged: (value) {
+                          context.read<StudentProvider>().search(value);
+                        },
                       ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                      const SizedBox(height: 12),
+                      // Action buttons row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: _showAddStudentDialog,
+                              icon: const Icon(Icons.add, size: 18),
+                              label: const Text(
+                                'Add',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: _exportToCSV,
+                              icon: const Icon(Icons.download, size: 18),
+                              label: const Text(
+                                'Export',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: _generateTestData,
+                              icon: const Icon(Icons.science, size: 18),
+                              label: const Text(
+                                'Test',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                }
+
+                // Desktop/Tablet layout (landscape or wide screens)
+                return Row(
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: _showAddStudentDialog,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add New Student'),
                     ),
-                    onChanged: (value) {
-                      context.read<StudentProvider>().search(value);
-                    },
-                  ),
-                ),
-              ],
+                    const SizedBox(width: 16),
+                    ElevatedButton.icon(
+                      onPressed: _exportToCSV,
+                      icon: const Icon(Icons.download),
+                      label: const Text('Export CSV'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton.icon(
+                      onPressed: _generateTestData,
+                      icon: const Icon(Icons.science),
+                      label: const Text('Generate Test Data'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                    const Spacer(),
+                    SizedBox(
+                      width: 300,
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search by name, email, or phone...',
+                          prefixIcon: const Icon(Icons.search),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                          ),
+                        ),
+                        onChanged: (value) {
+                          context.read<StudentProvider>().search(value);
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
 
