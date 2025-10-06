@@ -50,8 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     } catch (e) {
       Fluttertoast.showToast(
-        msg: 'Export failed: $e',
-        toastLength: Toast.LENGTH_SHORT,
+        msg: 'Export failed: ${e.toString().replaceAll('Exception: ', '')}',
+        toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
       );

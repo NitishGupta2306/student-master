@@ -208,9 +208,22 @@ class _StudentFormDialogState extends State<StudentFormDialog> {
         Navigator.of(context).pop();
       }
     } catch (e) {
+      String errorMessage = 'Save failed';
+      if (e.toString().contains('Email already exists')) {
+        errorMessage = 'This email is already registered';
+      } else if (e.toString().contains('Phone number already exists')) {
+        errorMessage = 'This phone number is already registered';
+      } else if (e.toString().contains('Student not found')) {
+        errorMessage = 'Student not found';
+      } else {
+        errorMessage =
+            'Save failed: ${e.toString().replaceAll('Exception: ', '')}';
+      }
+
       Fluttertoast.showToast(
-        msg: 'Save failed: $e',
+        msg: errorMessage,
         backgroundColor: Colors.red,
+        toastLength: Toast.LENGTH_LONG,
       );
     } finally {
       if (mounted) {

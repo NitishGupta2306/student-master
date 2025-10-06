@@ -55,6 +55,10 @@ class StudentProvider extends ChangeNotifier {
       _hasMore = _students.length >= _pageSize;
     } catch (e) {
       debugPrint('Error loading students: $e');
+      _students = [];
+      _totalCount = 0;
+      _hasMore = false;
+      rethrow;
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -84,6 +88,8 @@ class StudentProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('Error loading more students: $e');
       _currentPage--; // Revert page increment on error
+      _hasMore = false;
+      rethrow;
     } finally {
       _isLoadingMore = false;
       notifyListeners();

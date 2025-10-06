@@ -125,17 +125,31 @@ class SettingsScreen extends StatelessWidget {
                           );
 
                           if (confirmed == true && context.mounted) {
-                            await context
-                                .read<StudentProvider>()
-                                .generateTestData();
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Test data generated successfully',
+                            try {
+                              await context
+                                  .read<StudentProvider>()
+                                  .generateTestData();
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Test data generated successfully',
+                                    ),
+                                    backgroundColor: Colors.green,
                                   ),
-                                ),
-                              );
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Failed to generate test data: ${e.toString().replaceAll('Exception: ', '')}',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
                             }
                           }
                         },
@@ -184,17 +198,31 @@ class SettingsScreen extends StatelessWidget {
                           );
 
                           if (confirmed == true && context.mounted) {
-                            await context
-                                .read<StudentProvider>()
-                                .deleteAllStudents();
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'All students deleted successfully',
+                            try {
+                              await context
+                                  .read<StudentProvider>()
+                                  .deleteAllStudents();
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'All students deleted successfully',
+                                    ),
+                                    backgroundColor: Colors.green,
                                   ),
-                                ),
-                              );
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Failed to delete students: ${e.toString().replaceAll('Exception: ', '')}',
+                                    ),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
                             }
                           }
                         },
