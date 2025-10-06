@@ -223,6 +223,7 @@ class _StudentFormDialogState extends State<StudentFormDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         width: 600,
         constraints: const BoxConstraints(maxHeight: 700),
@@ -232,7 +233,13 @@ class _StudentFormDialogState extends State<StudentFormDialog> {
             // Header
             Container(
               padding: const EdgeInsets.all(16),
-              color: Theme.of(context).primaryColor,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
+              ),
               child: Row(
                 children: [
                   Text(

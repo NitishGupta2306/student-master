@@ -348,68 +348,59 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
 
-                    return SingleChildScrollView(
-                      controller: _scrollController,
-                      scrollDirection: Axis.vertical,
+                    return Padding(
                       padding: const EdgeInsets.all(12),
                       child: Column(
                         children: [
-                          Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: LayoutBuilder(
-                                builder: (context, constraints) {
-                                  return SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        minWidth: constraints.maxWidth,
+                          Expanded(
+                            child: Card(
+                              elevation: 2,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: DataTable2(
+                                  columnSpacing: 40,
+                                  headingRowColor: WidgetStateProperty.all(
+                                    Colors.grey[200],
+                                  ),
+                                  horizontalMargin: 12,
+                                  minWidth: 600,
+                                  columns: [
+                                    DataColumn2(
+                                      label: _buildSortableHeader(
+                                        'Name',
+                                        'name',
                                       ),
-                                      child: DataTable(
-                                        columnSpacing: 40,
-                                        headingRowColor:
-                                            WidgetStateProperty.all(
-                                              Colors.grey[200],
-                                            ),
-                                        columns: [
-                                          DataColumn(
-                                            label: _buildSortableHeader(
-                                              'Name',
-                                              'name',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: _buildSortableHeader(
-                                              'Email',
-                                              'email',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: _buildSortableHeader(
-                                              'Phone',
-                                              'phone',
-                                            ),
-                                          ),
-                                        ],
-                                        rows: provider.students.map((student) {
-                                          return DataRow(
-                                            onSelectChanged: (_) =>
-                                                _showStudentDetail(student),
-                                            cells: [
-                                              DataCell(Text(student.name)),
-                                              DataCell(Text(student.email)),
-                                              DataCell(Text(student.phone)),
-                                            ],
-                                          );
-                                        }).toList(),
-                                      ),
+                                      size: ColumnSize.L,
                                     ),
-                                  );
-                                },
+                                    DataColumn2(
+                                      label: _buildSortableHeader(
+                                        'Email',
+                                        'email',
+                                      ),
+                                      size: ColumnSize.L,
+                                    ),
+                                    DataColumn2(
+                                      label: _buildSortableHeader(
+                                        'Phone',
+                                        'phone',
+                                      ),
+                                      size: ColumnSize.M,
+                                    ),
+                                  ],
+                                  rows: provider.students.map((student) {
+                                    return DataRow2(
+                                      onTap: () => _showStudentDetail(student),
+                                      cells: [
+                                        DataCell(Text(student.name)),
+                                        DataCell(Text(student.email)),
+                                        DataCell(Text(student.phone)),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ),
                           ),
