@@ -132,62 +132,165 @@ class StudentDetailDialog extends StatelessWidget {
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Basic Info
-                    _buildInfoRow('ID:', student.id),
-                    _buildInfoRow('Name:', student.name),
-                    _buildInfoRow('Email:', student.email),
-                    _buildInfoRow('Phone:', student.phone),
+                    // Photo and Info Card
+                    Card(
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            // Use smaller photo on narrow screens
+                            final photoWidth = constraints.maxWidth < 400
+                                ? 100.0
+                                : 200.0;
+                            final photoHeight = constraints.maxWidth < 400
+                                ? 120.0
+                                : 250.0;
+                            final spacing = constraints.maxWidth < 400
+                                ? 12.0
+                                : 24.0;
 
-                    const SizedBox(height: 24),
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Photo on Left
+                                Container(
+                                  width: photoWidth,
+                                  height: photoHeight,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: Colors.grey[300]!,
+                                    ),
+                                  ),
+                                  child:
+                                      student.photoPath != null &&
+                                          student.photoPath!.isNotEmpty &&
+                                          File(student.photoPath!).existsSync()
+                                      ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          child: Image.file(
+                                            File(student.photoPath!),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.person_outline,
+                                                size: constraints.maxWidth < 400
+                                                    ? 40.0
+                                                    : 64.0,
+                                                color: Colors.grey[400],
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                'No photo',
+                                                style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontSize: 10,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                ),
 
-                    // Photo
-                    if (student.photoPath != null &&
-                        student.photoPath!.isNotEmpty)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Photo',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                                SizedBox(width: spacing),
+
+                                // Info on Right
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildInfoRow('ID:', student.id),
+                                      _buildInfoRow('Name:', student.name),
+                                      _buildInfoRow('Email:', student.email),
+                                      _buildInfoRow('Phone:', student.phone),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Video Card
+                    Card(
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Video',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            constraints: const BoxConstraints(maxHeight: 300),
-                            child: File(student.photoPath!).existsSync()
-                                ? Image.file(
-                                    File(student.photoPath!),
-                                    fit: BoxFit.contain,
+                            const SizedBox(height: 12),
+                            student.videoPath != null &&
+                                    student.videoPath!.isNotEmpty &&
+                                    File(student.videoPath!).existsSync()
+                                ? VideoPlayerWidget(
+                                    videoPath: student.videoPath!,
                                   )
-                                : const Text('Photo not found'),
-                          ),
-                          const SizedBox(height: 24),
-                        ],
+                                : Container(
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(
+                                        color: Colors.grey[300]!,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.videocam_outlined,
+                                            size: 64,
+                                            color: Colors.grey[400],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            'No video uploaded',
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                          ],
+                        ),
                       ),
-
-                    // Video
-                    if (student.videoPath != null &&
-                        student.videoPath!.isNotEmpty)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Video',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          File(student.videoPath!).existsSync()
-                              ? VideoPlayerWidget(videoPath: student.videoPath!)
-                              : const Text('Video not found'),
-                        ],
-                      ),
+                    ),
                   ],
                 ),
               ),
