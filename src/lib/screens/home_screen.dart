@@ -18,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -26,11 +27,22 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<StudentProvider>().loadStudents();
     });
+
+    // Setup infinite scroll listener
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      context.read<StudentProvider>().loadMoreStudents();
+    }
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -139,15 +151,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Student Master Application'),
-        elevation: 2,
-      ),
       body: Column(
         children: [
           // Search and Action Bar
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             color: Colors.grey[100],
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -161,21 +169,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         controller: _searchController,
                         decoration: InputDecoration(
                           hintText: 'Search...',
-                          prefixIcon: const Icon(Icons.search),
+                          hintStyle: const TextStyle(fontSize: 13),
+                          prefixIcon: const Icon(Icons.search, size: 20),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           filled: true,
                           fillColor: Colors.white,
                           contentPadding: const EdgeInsets.symmetric(
-                            vertical: 8,
+                            vertical: 6,
                           ),
+                          isDense: true,
                         ),
+                        style: const TextStyle(fontSize: 13),
                         onChanged: (value) {
                           context.read<StudentProvider>().search(value);
                         },
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       // Action buttons row
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -183,50 +194,53 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: ElevatedButton.icon(
                               onPressed: _showAddStudentDialog,
-                              icon: const Icon(Icons.add, size: 18),
+                              icon: const Icon(Icons.add, size: 16),
                               label: const Text(
                                 'Add',
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(fontSize: 11),
                               ),
                               style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
+                                  vertical: 8,
+                                  horizontal: 8,
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 6),
                           Expanded(
                             child: ElevatedButton.icon(
                               onPressed: _exportToCSV,
-                              icon: const Icon(Icons.download, size: 18),
+                              icon: const Icon(Icons.download, size: 16),
                               label: const Text(
                                 'Export',
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(fontSize: 11),
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.green,
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
+                                  vertical: 8,
+                                  horizontal: 8,
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 6),
                           Expanded(
                             child: ElevatedButton.icon(
                               onPressed: _generateTestData,
-                              icon: const Icon(Icons.science, size: 18),
+                              icon: const Icon(Icons.science, size: 16),
                               label: const Text(
                                 'Test',
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(fontSize: 11),
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.orange,
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
+                                  vertical: 8,
+                                  horizontal: 8,
                                 ),
                               ),
                             ),
@@ -311,83 +325,53 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 return SingleChildScrollView(
+                  controller: _scrollController,
                   scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columnSpacing: 40,
-                      headingRowColor: WidgetStateProperty.all(
-                        Colors.grey[200],
-                      ),
-                      columns: [
-                        DataColumn(label: _buildSortableHeader('ID', 'id')),
-                        DataColumn(label: _buildSortableHeader('Name', 'name')),
-                        DataColumn(
-                          label: _buildSortableHeader('Email', 'email'),
-                        ),
-                        DataColumn(
-                          label: _buildSortableHeader('Phone', 'phone'),
-                        ),
-                      ],
-                      rows: provider.students.map((student) {
-                        return DataRow(
-                          onSelectChanged: (_) => _showStudentDetail(student),
-                          cells: [
-                            DataCell(Text(student.id)),
-                            DataCell(Text(student.name)),
-                            DataCell(Text(student.email)),
-                            DataCell(Text(student.phone)),
+                  child: Column(
+                    children: [
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          columnSpacing: 40,
+                          headingRowColor: WidgetStateProperty.all(
+                            Colors.grey[200],
+                          ),
+                          columns: [
+                            DataColumn(label: _buildSortableHeader('ID', 'id')),
+                            DataColumn(
+                              label: _buildSortableHeader('Name', 'name'),
+                            ),
+                            DataColumn(
+                              label: _buildSortableHeader('Email', 'email'),
+                            ),
+                            DataColumn(
+                              label: _buildSortableHeader('Phone', 'phone'),
+                            ),
                           ],
-                        );
-                      }).toList(),
-                    ),
+                          rows: provider.students.map((student) {
+                            return DataRow(
+                              onSelectChanged: (_) =>
+                                  _showStudentDetail(student),
+                              cells: [
+                                DataCell(Text(student.id)),
+                                DataCell(Text(student.name)),
+                                DataCell(Text(student.email)),
+                                DataCell(Text(student.phone)),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      if (provider.isLoadingMore)
+                        const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                    ],
                   ),
                 );
               },
             ),
-          ),
-
-          // Pagination Bar
-          Consumer<StudentProvider>(
-            builder: (context, provider, child) {
-              if (provider.totalCount == 0) return const SizedBox.shrink();
-
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  border: Border(top: BorderSide(color: Colors.grey[300]!)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.chevron_left),
-                      onPressed: provider.currentPage > 0
-                          ? provider.previousPage
-                          : null,
-                    ),
-                    const SizedBox(width: 16),
-                    Text(
-                      'Page ${provider.currentPage + 1} of ${provider.totalPages}',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      '(${provider.totalCount} students)',
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    ),
-                    const SizedBox(width: 16),
-                    IconButton(
-                      icon: const Icon(Icons.chevron_right),
-                      onPressed: provider.currentPage < provider.totalPages - 1
-                          ? provider.nextPage
-                          : null,
-                    ),
-                  ],
-                ),
-              );
-            },
           ),
         ],
       ),
